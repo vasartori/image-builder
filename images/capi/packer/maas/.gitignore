@@ -1,0 +1,7 @@
+packer.json
+ks.cfg
+preseed.cfg
+preseed-efi.cfg
+user-data
+seeds-cloudimg.iso
+OVMF_VARS.fd

@@ -183,6 +183,11 @@ deps-vultr: deps-common
 	$(PACKER) init packer/config.pkr.hcl
 	$(PACKER) init packer/vultr/config.pkr.hcl
 
+.PHONY: deps-maas
+deps-maas: ## Installs/checks dependencies for MaaS builds
+deps-maas: deps-common
+	$(PACKER) init packer/config.pkr.hcl
+	$(PACKER) init packer/maas/config.pkr.hcl
 ## --------------------------------------
 ## Packer Configuration
 ## --------------------------------------
@@ -393,6 +398,8 @@ PROXMOX_BUILD_NAMES 		?= proxmox-ubuntu-2204 proxmox-ubuntu-2404 proxmox-rockyli
 
 VULTR_BUILD_NAMES 				?=	vultr-ubuntu-2204
 
+MAAS_BUILD_NAMES 			?= maas-ubuntu-2204-cloudimg
+
 ## --------------------------------------
 ## Dynamic build targets
 ## --------------------------------------
@@ -439,6 +446,8 @@ PROXMOX_BUILD_TARGETS		:= $(addprefix build-,$(PROXMOX_BUILD_NAMES))
 PROXMOX_VALIDATE_TARGETS	:= $(addprefix validate-,$(PROXMOX_BUILD_NAMES))
 VULTR_BUILD_TARGETS 	:= $(addprefix build-,$(VULTR_BUILD_NAMES))
 VULTR_VALIDATE_TARGETS 	:= $(addprefix validate-,$(VULTR_BUILD_NAMES))
+MAAS_BUILD_TARGETS	:= $(addprefix build-,$(MAAS_BUILD_NAMES))
+MAAS_VALIDATE_TARGETS	:= $(addprefix validate-,$(MAAS_BUILD_NAMES))
 
 .PHONY: $(NODE_OVA_LOCAL_BUILD_TARGETS)
 $(NODE_OVA_LOCAL_BUILD_TARGETS): deps-ova set-ssh-password
@@ -623,6 +632,15 @@ $(VULTR_BUILD_TARGETS): deps-vultr
 $(VULTR_VALIDATE_TARGETS): deps-vultr
 	$(PACKER) validate $(PACKER_NODE_FLAGS) -var-file="$(abspath packer/vultr/$(subst validate-vultr-,,$@).json)" $(ABSOLUTE_PACKER_VAR_FILES) packer/vultr/packer.json
 
+.PHONY: $(MAAS_BUILD_TARGETS)
+$(MAAS_BUILD_TARGETS): deps-maas
+	$(PACKER) build $(PACKER_NODE_FLAGS) -var-file="$(abspath packer/maas/$(subst build-,,$@).json)" $(ABSOLUTE_PACKER_VAR_FILES) packer/maas/packer.json
+
+.PHONY: $(MAAS_VALIDATE_TARGETS)
+$(MAAS_VALIDATE_TARGETS): deps-maas
+	$(PACKER) validate $(PACKER_NODE_FLAGS) -var-file="$(abspath packer/maas/$(subst validate-,,$@).json)" $(ABSOLUTE_PACKER_VAR_FILES) packer/maas/packer.json
+
+
 ## --------------------------------------
 ## Dynamic clean targets
 ## --------------------------------------
@@ -711,6 +729,8 @@ build-gce-ubuntu-2204: ## Builds the GCE ubuntu-2204 image
 build-gce-ubuntu-2404: ## Builds the GCE ubuntu-2404 image
 build-gce-rhel-8: ## Builds the GCE rhel-8 image
 build-gce-all: $(GCE_BUILD_TARGETS) ## Builds all GCE image
+
+build-maas-ubuntu-2204-cloudimg: ## Builds Ubuntu 22.04 MaaS image using cloud image
 
 build-node-ova-local-centos-7: ## Builds CentOS 7 Node OVA w local hypervisor
 build-node-ova-local-flatcar: ## Builds Flatcar stable Node OVA w local hypervisor
@@ -947,6 +967,8 @@ validate-gce-ubuntu-2204: ## Validates Ubuntu 22.04 GCE Snapshot Packer config
 validate-gce-ubuntu-2404: ## Validates Ubuntu 24.04 GCE Snapshot Packer config
 validate-gce-rhel-8: ## Validates RHEL 8 GCE Snapshot Packer config
 validate-gce-all: $(GCE_VALIDATE_TARGETS) ## Validates all GCE Snapshot Packer config
+
+validate-maas-ubuntu-2204-cloudimg: ## Validates Ubuntu 22.04 MaaS image packer config using cloud image
 
 validate-node-ova-local-centos-7: ## Validates CentOS 7 Node OVA Packer config w local hypervisor
 validate-node-ova-local-flatcar: ## Validates Flatcar stable Node OVA Packer config w local hypervisor
