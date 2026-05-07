@@ -89,15 +89,15 @@
     replace: nullbootctl --no-tpm --no-efivars
   when: packer_build_name is search('cvm')
 
-- name: Perform a dist-upgrade
-  ansible.builtin.apt:
-    force_apt_get: true
-    update_cache: true
-    upgrade: dist
-  register: apt_lock_status
-  until: apt_lock_status is not failed
-  retries: 5
-  delay: 10
+# - name: Perform a dist-upgrade
+#   ansible.builtin.apt:
+#     force_apt_get: true
+#     update_cache: true
+#     upgrade: dist
+#   register: apt_lock_status
+#   until: apt_lock_status is not failed
+#   retries: 5
+#   delay: 10
 
 - name: Install baseline dependencies  # noqa: package-latest
   ansible.builtin.apt:

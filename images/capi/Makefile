@@ -407,7 +407,7 @@ PROXMOX_BUILD_NAMES 		?= proxmox-ubuntu-2204 proxmox-ubuntu-2404 proxmox-ubuntu-
 
 VULTR_BUILD_NAMES 				?=	vultr-ubuntu-2204 vultr-ubuntu-2404
 
-MAAS_BUILD_NAMES 			?= maas-ubuntu-2204-efi maas-ubuntu-2404-efi
+MAAS_BUILD_NAMES 			?= maas-ubuntu-2204-efi maas-ubuntu-2404-efi maas-ubuntu-2204 maas-ubuntu-2404
 
 SCALEWAY_BUILD_NAMES 				?=	scaleway-rockylinux-9 scaleway-ubuntu-2204 scaleway-ubuntu-2404
 
@@ -819,6 +819,8 @@ build-qemu-all: $(QEMU_BUILD_TARGETS) ## Builds all Qemu images
 
 build-maas-ubuntu-2204-efi: ## Builds Ubuntu 22.04 MaaS image that EFI boots
 build-maas-ubuntu-2404-efi: ## Builds Ubuntu 24.04 MaaS image that EFI boots
+build-maas-ubuntu-2204: ## Builds Ubuntu 22.04 MaaS image
+build-maas-ubuntu-2404: ## Builds Ubuntu 24.04 MaaS image
 
 build-raw-flatcar: ## Builds Flatcar RAW image
 build-raw-ubuntu-2204: ## Builds Ubuntu 22.04 RAW image

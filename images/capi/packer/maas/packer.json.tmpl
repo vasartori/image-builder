@@ -51,6 +51,9 @@
       "type": "shell-local"
     },
     {
+      "environment_vars": [
+        "FIRMWARE={{user `firmware`}}"
+      ],
       "inline": [
         "sudo bash ./packer/maas/scripts/generate-maas-image.sh {{user `output_directory`}}/{{user `artifact_name`}}"
       ],
